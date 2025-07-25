@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallup Strengths Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #000000;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1, h2 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+        }
+
+        .description {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1e3a8a;
+        }
+
+        input[type="text"], input[type="email"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus {
+            outline: none;
+            border-color: #1e3a8a;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .scale-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .scale-option input[type="radio"] {
+            margin-bottom: 5px;
+            transform: scale(1.2);
+        }
+
+        .scale-label {
+            font-size: 0.9em;
+            text-align: center;
+            color: #666;
+        }
+
+        .scale-ends {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #888;
+            font-style: italic;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1e3a8a;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .button {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            background-color: #2563eb;
+        }
+
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            display: none;
+            text-align: center;
+        }
+
+        .results-header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .strength-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            border-left: 5px solid #1e3a8a;
+        }
+
+        .strength-rank {
+            background: #1e3a8a;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .strength-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .strength-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .rating-scale {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .scale-option {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .scale-ends {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <img src="https://brucewade.co.za/wp-content/uploads/2025/07/bat-3.png" alt="Logo" class="logo">
+            <h1>Gallup Strengths Assessment</h1>
+            <p class="description">
+                Discover your top 5 strengths based on the renowned Gallup CliftonStrengths methodology. 
+                This assessment will help you identify your natural talents and understand how to leverage them for success.
+            </p>
+        </div>
+
+        <!-- Assessment Form -->
+        <div id="assessment-form">
+            <!-- User Information -->
+            <div class="form-section">
+                <h2>Personal Information</h2>
+                <div class="user-info">
+                    <div class="input-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                        <div class="error-message" id="nameError">Please enter your full name</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="company">Company/Organization</label>
+                        <input type="text" id="company" name="company">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="form-section">
+                <div class="progress-text">Question <span id="currentQuestion">0</span> of 30</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Questions Section -->
+            <div class="form-section" id="questionsContainer">
+                <!-- Questions will be dynamically generated here -->
+            </div>
+
+            <button class="button" id="nextButton" onclick="nextQuestion()">Start Assessment</button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="results-section">
+            <div class="results-header">
+                <img src="https://brucewade.co.za/wp-content/uploads/2025/07/bat-3.png" alt="Logo" class="logo">
+                <h1>Your Top 5 Strengths</h1>
+                <h2 id="resultName"></h2>
+                <p id="resultCompany"></p>
+            </div>
+
+            <div id="strengthsList">
+                <!-- Results will be displayed here -->
+            </div>
+
+            <a href="https://outlook.office365.com/book/BookwithBruce@em-solutions.co.za/" class="button" target="_blank">
+                Book a Consultation with Bruce
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Gallup CliftonStrengths themes and descriptions
+        const strengths = {
+            'Achiever': 'You work hard and possess a great deal of stamina. You take immense satisfaction in being busy and productive.',
+            'Activator': 'You can make things happen by turning thoughts into action. You want to do things now, rather than simply talk about them.',
+            'Adaptability': 'You prefer to go with the flow. You tend to be a "now" person who takes things as they come and discovers the future one day at a time.',
+            'Analytical': 'You search for reasons and causes. You have the ability to think about all of the factors that might affect a situation.',
+            'Arranger': 'You can organize, but you also have a flexibility that complements this ability. You like to determine how all of the pieces and resources can be arranged for maximum productivity.',
+            'Belief': 'You have certain core values that are unchanging. Out of these values emerges a defined purpose for your life.',
+            'Command': 'You have presence. You can take control of a situation and make decisions. You are not intimidated by confrontation.',
+            'Communication': 'You generally find it easy to put your thoughts into words. You are a good conversationalist and presenter.',
+            'Competition': 'You measure your progress against others. You strive to win first place and revel in contests.',
+            'Connectedness': 'You have faith in the links among all things. You believe there are few coincidences and that almost every event has meaning.',
+            'Consistency': 'Balance is important to you. You are keenly aware of the need to treat people the same, no matter what their station in life.',
+            'Context': 'You enjoy thinking about the past. You understand the present by researching its history.',
+            'Deliberative': 'You are best described by the serious care you take in making decisions or choices. You anticipate obstacles.',
+            'Developer': 'You see the potential in others. You can see the signs of each small improvement and derive satisfaction from evidence of progress.',
+            'Discipline': 'Your world needs to be predictable. You feel more comfortable when structure and order are imposed.',
+            'Empathy': 'You can sense other people's feelings by imagining yourself in others' lives or situations.',
+            'Focus': 'You can take a direction, follow through, and make the corrections necessary to stay on track.',
+            'Futuristic': 'You are inspired by the future and what could be. You energize others with your visions.',
+            'Harmony': 'You look for consensus. You don't enjoy conflict; rather, you seek areas of agreement.',
+            'Ideation': 'You are fascinated by ideas. You are able to find connections between seemingly disparate phenomena.',
+            'Includer': 'You are accepting of others. You show awareness of those who feel left out and make an effort to include them.',
+            'Individualization': 'You are intrigued with the unique qualities of each person. You have a gift for figuring out how different people can work together productively.',
+            'Input': 'You have a craving to know more. Often you like to collect and archive all kinds of information.',
+            'Intellection': 'You like to think. You like mental activity. You like exercising the "muscles" of your brain.',
+            'Learner': 'You have a great desire to learn and want to continuously improve. The process of learning, rather than the outcome, excites you.',
+            'Maximizer': 'You focus on strengths as a way to stimulate personal and group excellence. You seek to transform something strong into something superb.',
+            'Positivity': 'You have contagious enthusiasm. You are upbeat and can get others excited about what they are going to do.',
+            'Relator': 'You enjoy close relationships with others. You find deep satisfaction in working hard with friends to achieve a goal.',
+            'Responsibility': 'You take psychological ownership of what you say you will do. You are committed to stable values such as honesty and loyalty.',
+            'Restorative': 'You are adept at dealing with problems. You are good at figuring out what is wrong and resolving it.',
+            'Self-Assurance': 'You feel confident in your ability to manage your own life. You possess an inner compass that gives you confidence.',
+            'Significance': 'You want to be very important in others' eyes. You are independent and prioritize projects based on how much influence they will have on your organization.',
+            'Strategic': 'You create alternative ways to proceed. Faced with any given scenario, you can quickly spot the relevant patterns and issues.',
+            'Woo': 'You love the challenge of meeting new people and winning them over. You derive satisfaction from breaking the ice and making a connection.'
+        };
+
+        // Assessment questions designed to identify strengths
+        const questions = [
+            { text: "I am highly motivated by setting and achieving challenging goals", themes: ['Achiever', 'Focus', 'Competition'] },
+            { text: "I prefer to act quickly rather than spend too much time planning", themes: ['Activator', 'Adaptability', 'Self-Assurance'] },
+            { text: "I easily adjust my approach when circumstances change unexpectedly", themes: ['Adaptability', 'Strategic', 'Restorative'] },
+            { text: "I thoroughly research and analyze information before making decisions", themes: ['Analytical', 'Deliberative', 'Input'] },
+            { text: "I excel at coordinating multiple tasks and resources efficiently", themes: ['Arranger', 'Discipline', 'Maximizer'] },
+            { text: "My core values strongly influence all my decisions and actions", themes: ['Belief', 'Consistency', 'Responsibility'] },
+            { text: "I am comfortable taking charge in difficult or uncertain situations", themes: ['Command', 'Self-Assurance', 'Activator'] },
+            { text: "I can easily explain complex ideas to others in simple terms", themes: ['Communication', 'Individualization', 'Developer'] },
+            { text: "I am energized by competitive situations and strive to win", themes: ['Competition', 'Achiever', 'Significance'] },
+            { text: "I believe that everything happens for a reason and is interconnected", themes: ['Connectedness', 'Context', 'Harmony'] },
+            { text: "I insist on fair treatment for everyone regardless of their position", themes: ['Consistency', 'Belief', 'Includer'] },
+            { text: "I often look to the past to better understand current situations", themes: ['Context', 'Learner', 'Analytical'] },
+            { text: "I carefully consider potential risks before taking action", themes: ['Deliberative', 'Analytical', 'Responsibility'] },
+            { text: "I enjoy helping others recognize and develop their potential", themes: ['Developer', 'Individualization', 'Positivity'] },
+            { text: "I work best in structured, organized environments", themes: ['Discipline', 'Focus', 'Consistency'] },
+            { text: "I can easily understand and relate to how others are feeling", themes: ['Empathy', 'Relator', 'Harmony'] },
+            { text: "I maintain concentration on my priorities despite distractions", themes: ['Focus', 'Discipline', 'Achiever'] },
+            { text: "I am excited by possibilities and love sharing my vision of the future", themes: ['Futuristic', 'Ideation', 'Positivity'] },
+            { text: "I work hard to find common ground and avoid conflict", themes: ['Harmony', 'Includer', 'Connectedness'] },
+            { text: "I am fascinated by new concepts and love brainstorming creative solutions", themes: ['Ideation', 'Strategic', 'Futuristic'] },
+            { text: "I make an effort to include everyone and ensure no one feels left out", themes: ['Includer', 'Empathy', 'Developer'] },
+            { text: "I appreciate what makes each person unique and leverage those differences", themes: ['Individualization', 'Developer', 'Maximizer'] },
+            { text: "I have an insatiable curiosity and love gathering information", themes: ['Input', 'Learner', 'Analytical'] },
+            { text: "I enjoy deep thinking and philosophical conversations", themes: ['Intellection', 'Context', 'Ideation'] },
+            { text: "I am constantly seeking opportunities to learn and grow", themes: ['Learner', 'Input', 'Developer'] },
+            { text: "I focus on building upon existing strengths rather than fixing weaknesses", themes: ['Maximizer', 'Developer', 'Strategic'] },
+            { text: "I naturally lift others' spirits and help them see the bright side", themes: ['Positivity', 'Woo', 'Communication'] },
+            { text: "I prefer working closely with a small group of trusted colleagues", themes: ['Relator', 'Empathy', 'Harmony'] },
+            { text: "I feel personally accountable for commitments I make to others", themes: ['Responsibility', 'Belief', 'Consistency'] },
+            { text: "I am skilled at identifying problems and finding practical solutions", themes: ['Restorative', 'Analytical', 'Strategic'] }
+        ];
+
+        let currentQuestionIndex = 0;
+        let responses = [];
+        let strengthScores = {};
+
+        // Initialize strength scores
+        Object.keys(strengths).forEach(strength => {
+            strengthScores[strength] = 0;
+        });
+
+        function validateUserInfo() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const nameError = document.getElementById('nameError');
+            
+            if (!fullName) {
+                nameError.style.display = 'block';
+                return false;
+            }
+            
+            nameError.style.display = 'none';
+            return true;
+        }
+
+        function startAssessment() {
+            if (!validateUserInfo()) {
+                return;
+            }
+            
+            displayQuestion();
+            updateProgress();
+            document.getElementById('nextButton').textContent = 'Next Question';
+            document.getElementById('nextButton').onclick = nextQuestion;
+        }
+
+        function displayQuestion() {
+            const container = document.getElementById('questionsContainer');
+            const question = questions[currentQuestionIndex];
+            
+            container.innerHTML = `
+                <div class="question">
+                    <div class="question-text">${question.text}</div>
+                    <div class="rating-scale">
+                        <div class="scale-option">
+                            <input type="radio" name="q${currentQuestionIndex}" value="1" id="q${currentQuestionIndex}_1">
+                            <label for="q${currentQuestionIndex}_1" class="scale-label">1</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${currentQuestionIndex}" value="2" id="q${currentQuestionIndex}_2">
+                            <label for="q${currentQuestionIndex}_2" class="scale-label">2</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${currentQuestionIndex}" value="3" id="q${currentQuestionIndex}_3">
+                            <label for="q${currentQuestionIndex}_3" class="scale-label">3</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${currentQuestionIndex}" value="4" id="q${currentQuestionIndex}_4">
+                            <label for="q${currentQuestionIndex}_4" class="scale-label">4</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${currentQuestionIndex}" value="5" id="q${currentQuestionIndex}_5">
+                            <label for="q${currentQuestionIndex}_5" class="scale-label">5</label>
+                        </div>
+                    </div>
+                    <div class="scale-ends">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex === 0 && document.getElementById('nextButton').textContent === 'Start Assessment') {
+                startAssessment();
+                return;
+            }
+
+            const selectedValue = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+            
+            if (!selectedValue) {
+                alert('Please select an answer before proceeding.');
+                return;
+            }
+
+            // Record the response
+            responses[currentQuestionIndex] = parseInt(selectedValue.value);
+            
+            // Update strength scores
+            const question = questions[currentQuestionIndex];
+            const score = parseInt(selectedValue.value);
+            
+            question.themes.forEach(theme => {
+                strengthScores[theme] += score;
+            });
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+                updateProgress();
+                
+                if (currentQuestionIndex === questions.length - 1) {
+                    document.getElementById('nextButton').textContent = 'Complete Assessment';
+                }
+            } else {
+                showResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+        }
+
+        function showResults() {
+            // Calculate top 5 strengths
+            const sortedStrengths = Object.entries(strengthScores)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+
+            // Hide assessment form and show results
+            document.getElementById('assessment-form').style.display = 'none';
+            document.getElementById('results-section').style.display = 'block';
+
+            // Display user info
+            const fullName = document.getElementById('fullName').value;
+            const company = document.getElementById('company').value;
+            
+            document.getElementById('resultName').textContent = fullName;
+            document.getElementById('resultCompany').textContent = company ? `${company}` : '';
+
+            // Display top 5 strengths
+            const strengthsList = document.getElementById('strengthsList');
+            strengthsList.innerHTML = sortedStrengths.map(([strength, score], index) => `
+                <div class="strength-item">
+                    <div style="display: flex; align-items: flex-start;">
+                        <div class="strength-rank">${index + 1}</div>
+                        <div style="flex: 1;">
+                            <div class="strength-name">${strength}</div>
+                            <div class="strength-description">${strengths[strength]}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize the assessment
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('nextButton').onclick = startAssessment;
+        });
+    </script>
+</body>
+</html>
