@@ -131,12 +131,14 @@
         .scale-option input[type="radio"] {
             margin-bottom: 5px;
             transform: scale(1.2);
+            cursor: pointer;
         }
 
         .scale-label {
             font-size: 0.9em;
             text-align: center;
             color: #666;
+            cursor: pointer;
         }
 
         .scale-ends {
@@ -162,6 +164,7 @@
             background: #1e3a8a;
             transition: width 0.3s ease;
             border-radius: 4px;
+            width: 0%;
         }
 
         .progress-text {
@@ -248,6 +251,14 @@
             display: none;
         }
 
+        #questionsContainer {
+            display: none;
+        }
+
+        #progressSection {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -299,7 +310,7 @@
         <!-- Assessment Form -->
         <div id="assessment-form">
             <!-- User Information -->
-            <div class="form-section">
+            <div class="form-section" id="userInfoSection">
                 <h2>Personal Information</h2>
                 <div class="user-info">
                     <div class="input-group">
@@ -315,8 +326,8 @@
             </div>
 
             <!-- Progress Bar -->
-            <div class="form-section">
-                <div class="progress-text">Question <span id="currentQuestion">0</span> of 30</div>
+            <div class="form-section" id="progressSection">
+                <div class="progress-text">Question <span id="currentQuestion">1</span> of 30</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
@@ -327,7 +338,7 @@
                 <!-- Questions will be dynamically generated here -->
             </div>
 
-            <button class="button" id="nextButton" onclick="nextQuestion()">Start Assessment</button>
+            <button class="button" id="nextButton">Start Assessment</button>
         </div>
 
         <!-- Results Section -->
@@ -370,7 +381,7 @@
             'Empathy': 'You can sense other people's feelings by imagining yourself in others' lives or situations.',
             'Focus': 'You can take a direction, follow through, and make the corrections necessary to stay on track.',
             'Futuristic': 'You are inspired by the future and what could be. You energize others with your visions.',
-            'Harmony': 'You look for consensus. You don't enjoy conflict; rather, you seek areas of agreement.',
+            'Harmony': 'You look for consensus. You don\'t enjoy conflict; rather, you seek areas of agreement.',
             'Ideation': 'You are fascinated by ideas. You are able to find connections between seemingly disparate phenomena.',
             'Includer': 'You are accepting of others. You show awareness of those who feel left out and make an effort to include them.',
             'Individualization': 'You are intrigued with the unique qualities of each person. You have a gift for figuring out how different people can work together productively.',
@@ -383,7 +394,7 @@
             'Responsibility': 'You take psychological ownership of what you say you will do. You are committed to stable values such as honesty and loyalty.',
             'Restorative': 'You are adept at dealing with problems. You are good at figuring out what is wrong and resolving it.',
             'Self-Assurance': 'You feel confident in your ability to manage your own life. You possess an inner compass that gives you confidence.',
-            'Significance': 'You want to be very important in others' eyes. You are independent and prioritize projects based on how much influence they will have on your organization.',
+            'Significance': 'You want to be very important in others\' eyes. You are independent and prioritize projects based on how much influence they will have on your organization.',
             'Strategic': 'You create alternative ways to proceed. Faced with any given scenario, you can quickly spot the relevant patterns and issues.',
             'Woo': 'You love the challenge of meeting new people and winning them over. You derive satisfaction from breaking the ice and making a connection.'
         };
@@ -425,6 +436,7 @@
         let currentQuestionIndex = 0;
         let responses = [];
         let strengthScores = {};
+        let assessmentStarted = false;
 
         // Initialize strength scores
         Object.keys(strengths).forEach(strength => {
@@ -437,6 +449,7 @@
             
             if (!fullName) {
                 nameError.style.display = 'block';
+                document.getElementById('fullName').focus();
                 return false;
             }
             
@@ -445,17 +458,32 @@
         }
 
         function startAssessment() {
+            console.log('Starting assessment...');
+            
             if (!validateUserInfo()) {
                 return;
             }
             
+            assessmentStarted = true;
+            currentQuestionIndex = 0;
+            
+            // Hide user info section and show progress and questions
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('questionsContainer').style.display = 'block';
+            
             displayQuestion();
             updateProgress();
-            document.getElementById('nextButton').textContent = 'Next Question';
-            document.getElementById('nextButton').onclick = nextQuestion;
+            
+            // Update button
+            const nextButton = document.getElementById('nextButton');
+            nextButton.textContent = 'Next Question';
+            nextButton.onclick = nextQuestion;
         }
 
         function displayQuestion() {
+            console.log('Displaying question:', currentQuestionIndex);
+            
             const container = document.getElementById('questionsContainer');
             const question = questions[currentQuestionIndex];
             
@@ -493,7 +521,9 @@
         }
 
         function nextQuestion() {
-            if (currentQuestionIndex === 0 && document.getElementById('nextButton').textContent === 'Start Assessment') {
+            console.log('Next question called, current index:', currentQuestionIndex);
+            
+            if (!assessmentStarted) {
                 startAssessment();
                 return;
             }
@@ -531,16 +561,21 @@
         }
 
         function updateProgress() {
-            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            const progress = (currentQuestionIndex / questions.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
             document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
         }
 
         function showResults() {
+            console.log('Showing results...');
+            console.log('Strength scores:', strengthScores);
+            
             // Calculate top 5 strengths
             const sortedStrengths = Object.entries(strengthScores)
                 .sort(([,a], [,b]) => b - a)
                 .slice(0, 5);
+
+            console.log('Top 5 strengths:', sortedStrengths);
 
             // Hide assessment form and show results
             document.getElementById('assessment-form').style.display = 'none';
@@ -551,7 +586,7 @@
             const company = document.getElementById('company').value;
             
             document.getElementById('resultName').textContent = fullName;
-            document.getElementById('resultCompany').textContent = company ? `${company}` : '';
+            document.getElementById('resultCompany').textContent = company ? company : '';
 
             // Display top 5 strengths
             const strengthsList = document.getElementById('strengthsList');
@@ -571,9 +606,26 @@
             window.scrollTo(0, 0);
         }
 
-        // Initialize the assessment
+        // Initialize the assessment when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('nextButton').onclick = startAssessment;
+            console.log('DOM loaded, setting up event listeners');
+            
+            const nextButton = document.getElementById('nextButton');
+            nextButton.addEventListener('click', function() {
+                console.log('Button clicked, assessmentStarted:', assessmentStarted);
+                if (!assessmentStarted) {
+                    startAssessment();
+                } else {
+                    nextQuestion();
+                }
+            });
+            
+            // Add enter key support for name field
+            document.getElementById('fullName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    startAssessment();
+                }
+            });
         });
     </script>
 </body>
