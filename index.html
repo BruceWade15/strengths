@@ -99,17 +99,24 @@
         }
 
         .question {
-            margin-bottom: 25px;
-            padding: 20px;
+            margin-bottom: 30px;
+            padding: 25px;
             background: #f9f9f9;
             border-radius: 8px;
             border-left: 4px solid #1e3a8a;
         }
 
+        .question-number {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
         .question-text {
             font-size: 1.1em;
             font-weight: 500;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .rating-scale {
@@ -117,7 +124,8 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
         .scale-option {
@@ -129,8 +137,8 @@
         }
 
         .scale-option input[type="radio"] {
-            margin-bottom: 5px;
-            transform: scale(1.2);
+            margin-bottom: 8px;
+            transform: scale(1.3);
             cursor: pointer;
         }
 
@@ -139,6 +147,7 @@
             text-align: center;
             color: #666;
             cursor: pointer;
+            font-weight: bold;
         }
 
         .scale-ends {
@@ -150,42 +159,18 @@
             font-style: italic;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #ddd;
-            border-radius: 4px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #1e3a8a;
-            transition: width 0.3s ease;
-            border-radius: 4px;
-            width: 0%;
-        }
-
-        .progress-text {
-            text-align: center;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-
         .button {
             background-color: #1e3a8a;
             color: white;
-            padding: 15px 30px;
+            padding: 20px 40px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             transition: background-color 0.3s;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .button:hover {
@@ -212,36 +197,39 @@
 
         .strength-item {
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border-left: 5px solid #1e3a8a;
+            text-align: left;
         }
 
         .strength-rank {
             background: #1e3a8a;
             color: white;
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            margin-right: 15px;
+            margin-right: 20px;
+            font-size: 1.1em;
         }
 
         .strength-name {
-            font-size: 1.3em;
+            font-size: 1.4em;
             font-weight: bold;
             color: #1e3a8a;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .strength-description {
             color: #555;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1.05em;
         }
 
         .error-message {
@@ -251,11 +239,15 @@
             display: none;
         }
 
-        #questionsContainer {
-            display: none;
-        }
-
-        #progressSection {
+        .completion-message {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #2e7d32;
+            font-weight: bold;
+            text-align: center;
             display: none;
         }
 
@@ -272,26 +264,21 @@
                 padding: 20px;
             }
             
+            .question {
+                padding: 20px;
+            }
+            
             .rating-scale {
-                flex-direction: column;
-                gap: 15px;
+                gap: 10px;
             }
             
             .scale-option {
-                flex-direction: row;
-                justify-content: space-between;
-                width: 100%;
-                min-width: auto;
+                min-width: 60px;
             }
             
             .scale-ends {
-                flex-direction: column;
-                gap: 5px;
+                font-size: 0.8em;
             }
-        }
-
-        .hidden {
-            display: none;
         }
     </style>
 </head>
@@ -310,7 +297,7 @@
         <!-- Assessment Form -->
         <div id="assessment-form">
             <!-- User Information -->
-            <div class="form-section" id="userInfoSection">
+            <div class="form-section">
                 <h2>Personal Information</h2>
                 <div class="user-info">
                     <div class="input-group">
@@ -325,20 +312,23 @@
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            <div class="form-section" id="progressSection">
-                <div class="progress-text">Question <span id="currentQuestion">1</span> of 30</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+            <!-- All Questions Section -->
+            <div class="form-section">
+                <h2>Assessment Questions</h2>
+                <p style="margin-bottom: 30px; color: #666; font-size: 1.05em;">
+                    Please rate each statement based on how well it describes you, using the scale from 1 (Strongly Disagree) to 5 (Strongly Agree).
+                </p>
+                
+                <div id="allQuestionsContainer">
+                    <!-- All questions will be displayed here -->
                 </div>
-            </div>
 
-            <!-- Questions Section -->
-            <div class="form-section" id="questionsContainer">
-                <!-- Questions will be dynamically generated here -->
-            </div>
+                <div class="completion-message" id="completionMessage">
+                    Great! You've answered all questions. Click the button below to see your results.
+                </div>
 
-            <button class="button" id="nextButton">Start Assessment</button>
+                <button class="button" id="showResultsButton">Show Me My Results</button>
+            </div>
         </div>
 
         <!-- Results Section -->
@@ -378,7 +368,7 @@
             'Deliberative': 'You are best described by the serious care you take in making decisions or choices. You anticipate obstacles.',
             'Developer': 'You see the potential in others. You can see the signs of each small improvement and derive satisfaction from evidence of progress.',
             'Discipline': 'Your world needs to be predictable. You feel more comfortable when structure and order are imposed.',
-            'Empathy': 'You can sense other people's feelings by imagining yourself in others' lives or situations.',
+            'Empathy': 'You can sense other people\'s feelings by imagining yourself in others\' lives or situations.',
             'Focus': 'You can take a direction, follow through, and make the corrections necessary to stay on track.',
             'Futuristic': 'You are inspired by the future and what could be. You energize others with your visions.',
             'Harmony': 'You look for consensus. You don\'t enjoy conflict; rather, you seek areas of agreement.',
@@ -433,15 +423,59 @@
             { text: "I am skilled at identifying problems and finding practical solutions", themes: ['Restorative', 'Analytical', 'Strategic'] }
         ];
 
-        let currentQuestionIndex = 0;
-        let responses = [];
         let strengthScores = {};
-        let assessmentStarted = false;
 
         // Initialize strength scores
         Object.keys(strengths).forEach(strength => {
             strengthScores[strength] = 0;
         });
+
+        function displayAllQuestions() {
+            const container = document.getElementById('allQuestionsContainer');
+            
+            container.innerHTML = questions.map((question, index) => `
+                <div class="question">
+                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-text">${question.text}</div>
+                    <div class="rating-scale">
+                        <div class="scale-option">
+                            <input type="radio" name="q${index}" value="1" id="q${index}_1">
+                            <label for="q${index}_1" class="scale-label">1</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${index}" value="2" id="q${index}_2">
+                            <label for="q${index}_2" class="scale-label">2</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${index}" value="3" id="q${index}_3">
+                            <label for="q${index}_3" class="scale-label">3</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${index}" value="4" id="q${index}_4">
+                            <label for="q${index}_4" class="scale-label">4</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="q${index}" value="5" id="q${index}_5">
+                            <label for="q${index}_5" class="scale-label">5</label>
+                        </div>
+                    </div>
+                    <div class="scale-ends">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function validateAllAnswers() {
+            for (let i = 0; i < questions.length; i++) {
+                const selectedValue = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selectedValue) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         function validateUserInfo() {
             const fullName = document.getElementById('fullName').value.trim();
@@ -457,125 +491,43 @@
             return true;
         }
 
-        function startAssessment() {
-            console.log('Starting assessment...');
-            
-            if (!validateUserInfo()) {
-                return;
-            }
-            
-            assessmentStarted = true;
-            currentQuestionIndex = 0;
-            
-            // Hide user info section and show progress and questions
-            document.getElementById('userInfoSection').style.display = 'none';
-            document.getElementById('progressSection').style.display = 'block';
-            document.getElementById('questionsContainer').style.display = 'block';
-            
-            displayQuestion();
-            updateProgress();
-            
-            // Update button
-            const nextButton = document.getElementById('nextButton');
-            nextButton.textContent = 'Next Question';
-            nextButton.onclick = nextQuestion;
-        }
-
-        function displayQuestion() {
-            console.log('Displaying question:', currentQuestionIndex);
-            
-            const container = document.getElementById('questionsContainer');
-            const question = questions[currentQuestionIndex];
-            
-            container.innerHTML = `
-                <div class="question">
-                    <div class="question-text">${question.text}</div>
-                    <div class="rating-scale">
-                        <div class="scale-option">
-                            <input type="radio" name="q${currentQuestionIndex}" value="1" id="q${currentQuestionIndex}_1">
-                            <label for="q${currentQuestionIndex}_1" class="scale-label">1</label>
-                        </div>
-                        <div class="scale-option">
-                            <input type="radio" name="q${currentQuestionIndex}" value="2" id="q${currentQuestionIndex}_2">
-                            <label for="q${currentQuestionIndex}_2" class="scale-label">2</label>
-                        </div>
-                        <div class="scale-option">
-                            <input type="radio" name="q${currentQuestionIndex}" value="3" id="q${currentQuestionIndex}_3">
-                            <label for="q${currentQuestionIndex}_3" class="scale-label">3</label>
-                        </div>
-                        <div class="scale-option">
-                            <input type="radio" name="q${currentQuestionIndex}" value="4" id="q${currentQuestionIndex}_4">
-                            <label for="q${currentQuestionIndex}_4" class="scale-label">4</label>
-                        </div>
-                        <div class="scale-option">
-                            <input type="radio" name="q${currentQuestionIndex}" value="5" id="q${currentQuestionIndex}_5">
-                            <label for="q${currentQuestionIndex}_5" class="scale-label">5</label>
-                        </div>
-                    </div>
-                    <div class="scale-ends">
-                        <span>Strongly Disagree</span>
-                        <span>Strongly Agree</span>
-                    </div>
-                </div>
-            `;
-        }
-
-        function nextQuestion() {
-            console.log('Next question called, current index:', currentQuestionIndex);
-            
-            if (!assessmentStarted) {
-                startAssessment();
-                return;
-            }
-
-            const selectedValue = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
-            
-            if (!selectedValue) {
-                alert('Please select an answer before proceeding.');
-                return;
-            }
-
-            // Record the response
-            responses[currentQuestionIndex] = parseInt(selectedValue.value);
-            
-            // Update strength scores
-            const question = questions[currentQuestionIndex];
-            const score = parseInt(selectedValue.value);
-            
-            question.themes.forEach(theme => {
-                strengthScores[theme] += score;
+        function calculateResults() {
+            // Reset scores
+            Object.keys(strengths).forEach(strength => {
+                strengthScores[strength] = 0;
             });
 
-            currentQuestionIndex++;
-
-            if (currentQuestionIndex < questions.length) {
-                displayQuestion();
-                updateProgress();
-                
-                if (currentQuestionIndex === questions.length - 1) {
-                    document.getElementById('nextButton').textContent = 'Complete Assessment';
+            // Calculate scores based on responses
+            for (let i = 0; i < questions.length; i++) {
+                const selectedValue = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedValue) {
+                    const score = parseInt(selectedValue.value);
+                    const question = questions[i];
+                    
+                    question.themes.forEach(theme => {
+                        strengthScores[theme] += score;
+                    });
                 }
-            } else {
-                showResults();
             }
-        }
-
-        function updateProgress() {
-            const progress = (currentQuestionIndex / questions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
         }
 
         function showResults() {
-            console.log('Showing results...');
-            console.log('Strength scores:', strengthScores);
-            
+            if (!validateUserInfo()) {
+                alert('Please enter your full name before viewing results.');
+                return;
+            }
+
+            if (!validateAllAnswers()) {
+                alert('Please answer all questions before viewing your results.');
+                return;
+            }
+
+            calculateResults();
+
             // Calculate top 5 strengths
             const sortedStrengths = Object.entries(strengthScores)
                 .sort(([,a], [,b]) => b - a)
                 .slice(0, 5);
-
-            console.log('Top 5 strengths:', sortedStrengths);
 
             // Hide assessment form and show results
             document.getElementById('assessment-form').style.display = 'none';
@@ -606,24 +558,25 @@
             window.scrollTo(0, 0);
         }
 
+        function checkCompletion() {
+            if (validateAllAnswers()) {
+                document.getElementById('completionMessage').style.display = 'block';
+            } else {
+                document.getElementById('completionMessage').style.display = 'none';
+            }
+        }
+
         // Initialize the assessment when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, setting up event listeners');
+            displayAllQuestions();
             
-            const nextButton = document.getElementById('nextButton');
-            nextButton.addEventListener('click', function() {
-                console.log('Button clicked, assessmentStarted:', assessmentStarted);
-                if (!assessmentStarted) {
-                    startAssessment();
-                } else {
-                    nextQuestion();
-                }
-            });
-            
-            // Add enter key support for name field
-            document.getElementById('fullName').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    startAssessment();
+            const showResultsButton = document.getElementById('showResultsButton');
+            showResultsButton.addEventListener('click', showResults);
+
+            // Add change listeners to all radio buttons to check completion
+            document.addEventListener('change', function(e) {
+                if (e.target.type === 'radio') {
+                    checkCompletion();
                 }
             });
         });
